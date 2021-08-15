@@ -1,10 +1,14 @@
-# demo-angular-lib-multi-entries
+# demo-angular-lib-with-multi-entries
+
+Sometimes our Angular Lib goes too large. We have to import the whole bundle, maybe only need to use one feature in it. This makes our app's bundle size out of control.
+
+This repo tries to fix it from inside the lib package. Using multiple entries helps split several features into different bundles, so we can just use what we need on demand.
+
+It won't change the fact that all modules are still bundled in one package. It tree-shakes the code by using independent entries in apps, to shrink the size of it.
 
 ## Guide
 
-![](public/images/2021-08-15_09-53-55.png)
-
-Put independent features into several folders. Create `public-api.ts` and `index.ts` for each every one of them, along with a `package.json`.
+First, split independent features into several folders. Create `public-api.ts` and `index.ts` for each every one of them, along with a `package.json`.
 
 ```ts
 // src/demo1/index.ts
@@ -29,9 +33,11 @@ export * from "./demo1.module";
 }
 ```
 
-Angular NgPackage will try to search for sub-packages, which has a sub-entry(under a folder, with a `package.json` and a `ngPackage` in it).
+![](public/images/2021-08-15_09-53-55.png)
 
-Then create the main `index.ts` and `public-api.ts` aside with the main `package.json`. That is called a _SignPost_. 
+Angular NgPackage will search for sub-packages, which has a sub-entry (under a folder, with a `package.json` and a `ngPackage` in it), accoriding to where the main `package.json` belongs.
+
+Then, create the main `index.ts` and `public-api.ts` aside with the main `package.json`. That is called a _SignPost_. This name comes from 'Road Sign'. A _SignPost_ helps point out where the source is.
 
 ```ts
 // src/index.ts
@@ -49,11 +55,11 @@ export * from "./src/demo2/demo2.component";
 export * from "./src/demo2/demo2.module";
 ```
 
-Now we can run `ng build demo` to compile this library. Angular will bundle it into three packages.
+Now we can run `ng build demo` to compile this library. Angular NgPackage will bundle it into three packages.
 
 ![](public/images/2021-08-15_09-49-00.png)
 
-See what's like in dist.
+See what we have in `dist`.
 
 ![](public/images/2021-08-15_10-07-14.png)
 
@@ -63,7 +69,7 @@ Try it out in our app.
 
 First, setup some paths in `tsconfig.json`.
 
-Notice this is needed only because we're trying to import something from local dist. The paths here are just reproductions to make it consistent with importing from external NPM packages.
+Notice this is only needed as we're trying to import something from local `dist`. The paths here are just reproductions to make it consistent with importing from external NPM packages.
 
 ```json
 "paths": {
@@ -82,7 +88,7 @@ Notice this is needed only because we're trying to import something from local d
 }
 ```
 
-Then try to import some modules or services. We can either import from a single package like `@demo/demo1` or import all at once from the main package `@demo`. 
+Then, try to import some modules or services. We can either import from a single package like `@demo/demo1` or import all at once from the main package `@demo`. 
 
 ```ts
 // src/app/app.module.ts
@@ -103,7 +109,7 @@ import { AppComponent } from "./app.component";
 export class AppModule {}
 ```
 
- If only one package `@demo/demo1` is imported, app's bundle after compilation will not include other packages, like `@demo/demo2`.
+If only one package `@demo/demo1` is imported, app's bundle after compilation will not include other packages, like `@demo/demo2`.
 
 ## Refs
 
