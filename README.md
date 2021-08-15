@@ -22,6 +22,8 @@ export * from "./demo1.component";
 export * from "./demo1.module";
 ```
 
+Angular NgPackage will search for sub-packages, which has a secondary entry point (under a secondary level folder accoriding to where the main `package.json` belongs, with a `package.json` by itself and a `ngPackage` config in it).
+
 ```ts
 // src/demo1/package.json
 {
@@ -34,8 +36,6 @@ export * from "./demo1.module";
 ```
 
 ![](public/images/2021-08-15_09-53-55.png)
-
-Angular NgPackage will search for sub-packages, which has a secondary entry point (under a secondary level folder accoriding to where the main `package.json` belongs, with a `package.json` by itself and a `ngPackage` config in it).
 
 Then, create the main `index.ts` and `public-api.ts` aside with the main `package.json`. That is called a _SignPost_. This name comes from 'Road Sign'. A _SignPost_ helps point out where the source is.
 
@@ -88,7 +88,9 @@ Notice this is only needed as we're trying to import something from local `dist`
 }
 ```
 
-Then, try to import some modules or services. We can either import from a single package like `@demo/demo1` or import all at once from the main package `@demo`. 
+Then, try to import some modules or services. We can either import from a single package like `@demo/demo1` or import all at once from the main package `@demo`.
+
+If only one package `@demo/demo1` is imported, app's bundle will not include other packages, like `@demo/demo2`. If at least one import from the main entry `@demo`, everything will be considered as necessary to compile.
 
 ```ts
 // src/app/app.module.ts
@@ -108,8 +110,6 @@ import { AppComponent } from "./app.component";
 })
 export class AppModule {}
 ```
-
-If only one package `@demo/demo1` is imported, app's bundle after compilation will not include other packages, like `@demo/demo2`.
 
 ## Refs
 
