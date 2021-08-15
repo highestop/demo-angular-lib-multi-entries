@@ -1,0 +1,33 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "sourceMap": true,
+    "paths": {
+      "@demo": [
+        "dist/demo/demo",
+        "dist/demo"
+      ],
+      "@demo/demo1": [
+        "dist/demo/src/demo1",
+        "dist/demo/src/demo-src-demo1"
+      ],
+      "@demo/demo2": [
+        "dist/demo/src/demo2",
+        "dist/demo/src/demo-src-demo2"
+      ]
+    },
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  }
+}
